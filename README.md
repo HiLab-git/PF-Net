@@ -10,7 +10,7 @@ The structure of PF-Net. It combines 2D and 3D convolutions to deal with images 
 
 # Requirements
 * [Pytorch][torch_link] version >=1.0.1.
-* [PyMIC][pymic_link], a Pytorch-based toolkit for medical image computing. Version 0.2.3 is required. Install it by `pip install PYMIC==0.2.3`.
+* [PyMIC][pymic_link], a Pytorch-based toolkit for medical image computing. Version 0.2.4 is required. Install it by `pip install PYMIC==0.2.4`.
 * Some basic python packages such as Numpy, Pandas, SimpleITK.
 
 [torch_link]:https://pytorch.org
