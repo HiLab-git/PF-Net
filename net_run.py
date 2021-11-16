@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+Code for PF-Net (Pulmonary Fibrosis Segmentation Network) according to the following paper:
+    Guotai Wang et al., Semi-Supervised Segmentation of Radiation-Induced Pulmonary Fibrosis from 
+    Lung CT Scans with Multi-Scale Guided Dense Attention, IEEE Transactions on Medical Imaging, 2021
+    https://ieeexplore.ieee.org/document/9558828 
+Author: Guotai Wang
+Date: Nov 6, 2021
+"""
 from __future__ import print_function, division
 
 import os
@@ -85,8 +93,6 @@ class SegAgentWithMultiPred(SegmentationAgent):
         print("output_num", output_num)
         output_dir = self.config['testing']['output_dir']
         ignore_dir = self.config['testing'].get('filename_ignore_dir', True)
-        label_source = self.config['testing'].get('label_source', None)
-        label_target = self.config['testing'].get('label_target', None)
         filename_replace_source = self.config['testing'].get('filename_replace_source', None)
         filename_replace_target = self.config['testing'].get('filename_replace_target', None)
         if(not os.path.exists(output_dir)):
@@ -95,13 +101,10 @@ class SegAgentWithMultiPred(SegmentationAgent):
         names, pred = data['names'], data['predict']
         # prob = [scipy.special.softmax(item, axis = 1) for item in pred]
         prob = pred
-        print("number of prediction",  len(prob))
-        print("shape of each prediction")
         for probk in prob:
             print(probk.shape)
         output = np.asarray(np.argmax(prob[0],  axis = 1), np.uint8)
-        if((label_source is not None) and (label_target is not None)):
-            output = convert_label(output, label_source, label_target)
+        
         # save the output and (optionally) probability predictions
         root_dir  = self.config['dataset']['root_dir']
         for i in range(len(names)):
@@ -130,11 +133,10 @@ class SegAgentWithMultiPred(SegmentationAgent):
                 pred_k_savename = "{0:}_att_{1:}.{2:}".format(save_prefix, k, save_format)
                 save_nd_array_as_image(pred_k, pred_k_savename, root_dir + '/' + names[i])
 
-
 def main():
     if(len(sys.argv) < 3):
         print('Number of arguments should be 3. e.g.')
-        print('    python net_run_custom.py train config.cfg')
+        print('    python net_run.py train config.cfg')
         exit()
     stage    = str(sys.argv[1])
     cfg_file = str(sys.argv[2])
